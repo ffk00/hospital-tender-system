@@ -1,12 +1,12 @@
 package com.hospitaltender.server.entity;
 
-import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
+import jakarta.persistence.MappedSuperclass;
 
 
 @MappedSuperclass

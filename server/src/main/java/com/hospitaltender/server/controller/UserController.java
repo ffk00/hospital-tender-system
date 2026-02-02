@@ -1,8 +1,13 @@
 package com.hospitaltender.server.controller;
 
 import com.hospitaltender.server.service.UserService;
+import com.hospitaltender.server.entity.User;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @RestController
 @RequestMapping("/user")
@@ -19,4 +24,8 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        return null;
+    }
 }
