@@ -1,23 +1,38 @@
 package com.hospitaltender.server.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
-import java.util.Date;
-import jakarta.persistence.MappedSuperclass;
-
+import java.time.LocalDateTime;
 
 @MappedSuperclass
-@Setter //we have @data in our other entities i hope this is not redundant
+@EntityListeners(AuditingEntityListener.class)
 @Getter
-@ToString 
-public class BaseEntity implements Serializable {
+@Setter
+public abstract class BaseEntity implements Serializable {
 
-    private Date createdAt;
-    private User createdBy;
-    private Date updatedAt;
-    private User updatedBy;
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
+    @CreatedBy
+    @Column(name = "created_by", updatable = false)
+    private Long createdBy;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @LastModifiedBy
+    @Column(name = "updated_by")
+    private Long updatedBy;
 }
