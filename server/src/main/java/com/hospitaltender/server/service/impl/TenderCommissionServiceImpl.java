@@ -5,6 +5,8 @@ import com.hospitaltender.server.dto.response.TenderCommissionResponse;
 import com.hospitaltender.server.entity.Tender;
 import com.hospitaltender.server.entity.TenderCommission;
 import com.hospitaltender.server.entity.User;
+import com.hospitaltender.server.exception.DuplicateResourceException;
+import com.hospitaltender.server.exception.ResourceNotFoundException;
 import com.hospitaltender.server.mapper.TenderCommissionMapper;
 import com.hospitaltender.server.repository.TenderCommissionRepository;
 import com.hospitaltender.server.repository.TenderRepository;
@@ -29,14 +31,13 @@ public class TenderCommissionServiceImpl implements TenderCommissionService {
     @Override
     public TenderCommissionResponse addMember(CreateTenderCommissionRequest request) {
         Tender tender = tenderRepository.findById(request.getTenderId())
-                .orElseThrow(() -> new RuntimeException("Tender not found with id: " + request.getTenderId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Tender", request.getTenderId()));
 
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + request.getUserId()));
+                .orElseThrow(() -> new ResourceNotFoundException("User", request.getUserId()));
 
-        // Check if user is already a member of this commission
         if (commissionRepository.existsByTenderIdAndUserId(request.getTenderId(), request.getUserId())) {
-            throw new RuntimeException("User is already a member of this tender commission");
+            throw new DuplicateResourceException("User is already a member of this tender commission");
         }
 
         TenderCommission commission = commissionMapper.toEntity(request, tender, user);
@@ -56,7 +57,7 @@ public class TenderCommissionServiceImpl implements TenderCommissionService {
     @Override
     public void removeMember(Long id) {
         if (!commissionRepository.existsById(id)) {
-            throw new RuntimeException("Commission member not found with id: " + id);
+            throw new ResourceNotFoundException("TenderCommission", id);
         }
         commissionRepository.deleteById(id);
     }

@@ -5,6 +5,9 @@ import com.hospitaltender.server.dto.response.OfficialBidResponse;
 import com.hospitaltender.server.entity.OfficialBid;
 import com.hospitaltender.server.entity.Supplier;
 import com.hospitaltender.server.entity.TenderItem;
+import com.hospitaltender.server.exception.BusinessException;
+import com.hospitaltender.server.exception.DuplicateResourceException;
+import com.hospitaltender.server.exception.ResourceNotFoundException;
 import com.hospitaltender.server.mapper.OfficialBidMapper;
 import com.hospitaltender.server.repository.OfficialBidRepository;
 import com.hospitaltender.server.repository.SupplierRepository;
@@ -31,19 +34,13 @@ public class OfficialBidServiceImpl implements OfficialBidService {
     @Override
     public OfficialBidResponse create(CreateOfficialBidRequest request) {
         TenderItem tenderItem = tenderItemRepository.findById(request.getTenderItemId())
-                .orElseThrow(() -> new RuntimeException("Tender item not found with id: " + request.getTenderItemId()));
+                .orElseThrow(() -> new ResourceNotFoundException("TenderItem", request.getTenderItemId()));
 
         Supplier supplier = supplierRepository.findById(request.getSupplierId())
-                .orElseThrow(() -> new RuntimeException("Supplier not found with id: " + request.getSupplierId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier", request.getSupplierId()));
 
-        // Check if supplier is blacklisted
-        if (Boolean.TRUE.equals(supplier.getIsBlacklisted())) {
-            throw new RuntimeException("Cannot accept bid from blacklisted supplier: " + supplier.getCompanyName());
-        }
-
-        // Check if supplier already has a bid for this item
         if (bidRepository.existsByTenderItemIdAndSupplierId(request.getTenderItemId(), request.getSupplierId())) {
-            throw new RuntimeException("Supplier already has a bid for this tender item");
+            throw new DuplicateResourceException("Supplier already has a bid for this tender item");
         }
 
         OfficialBid bid = bidMapper.toEntity(request, tenderItem, supplier);
@@ -55,7 +52,7 @@ public class OfficialBidServiceImpl implements OfficialBidService {
     @Transactional(readOnly = true)
     public OfficialBidResponse getById(Long id) {
         OfficialBid bid = bidRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Official bid not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("OfficialBid", id));
         return bidMapper.toResponse(bid);
     }
 
@@ -80,7 +77,7 @@ public class OfficialBidServiceImpl implements OfficialBidService {
     @Override
     public void delete(Long id) {
         if (!bidRepository.existsById(id)) {
-            throw new RuntimeException("Official bid not found with id: " + id);
+            throw new ResourceNotFoundException("OfficialBid", id);
         }
         bidRepository.deleteById(id);
     }
@@ -88,25 +85,24 @@ public class OfficialBidServiceImpl implements OfficialBidService {
     @Override
     public OfficialBidResponse evaluateBids(Long tenderItemId) {
         TenderItem tenderItem = tenderItemRepository.findById(tenderItemId)
-                .orElseThrow(() -> new RuntimeException("Tender item not found with id: " + tenderItemId));
+                .orElseThrow(() -> new ResourceNotFoundException("TenderItem", tenderItemId));
 
         BigDecimal approximateCost = tenderItem.getApproximateUnitCost();
         if (approximateCost == null) {
-            throw new RuntimeException("Approximate cost not set for tender item. Please complete market research first.");
+            throw new BusinessException("Approximate cost not set for tender item. Please complete market research first.");
         }
 
         List<OfficialBid> bids = bidRepository.findByTenderItemId(tenderItemId);
         if (bids.isEmpty()) {
-            throw new RuntimeException("No bids found for tender item with id: " + tenderItemId);
+            throw new BusinessException("No bids found for tender item");
         }
 
-        // Reset all bids - clear previous evaluation
+        // Reset winning bid flags
         for (OfficialBid bid : bids) {
             bid.setIsWinningBid(false);
-            // Don't reset isValid and rejectionReason for manually rejected bids
         }
 
-        // Step 1: Reject bids that exceed approximate cost (if not already manually rejected)
+        // Reject bids that exceed approximate cost
         for (OfficialBid bid : bids) {
             if (Boolean.TRUE.equals(bid.getIsValid()) && bid.getBidPrice().compareTo(approximateCost) > 0) {
                 bid.setIsValid(false);
@@ -114,7 +110,7 @@ public class OfficialBidServiceImpl implements OfficialBidService {
             }
         }
 
-        // Step 2: Find the lowest valid bid
+        // Find lowest valid bid
         OfficialBid winningBid = bids.stream()
                 .filter(bid -> Boolean.TRUE.equals(bid.getIsValid()))
                 .min(Comparator.comparing(OfficialBid::getBidPrice))
@@ -122,10 +118,9 @@ public class OfficialBidServiceImpl implements OfficialBidService {
 
         if (winningBid == null) {
             bidRepository.saveAll(bids);
-            throw new RuntimeException("No valid bids remaining after evaluation. All bids exceed the approximate cost.");
+            throw new BusinessException("No valid bids remaining after evaluation. All bids exceed the approximate cost.");
         }
 
-        // Step 3: Mark the winner
         winningBid.setIsWinningBid(true);
         bidRepository.saveAll(bids);
 
@@ -135,7 +130,7 @@ public class OfficialBidServiceImpl implements OfficialBidService {
     @Override
     public OfficialBidResponse rejectBid(Long bidId, String reason) {
         OfficialBid bid = bidRepository.findById(bidId)
-                .orElseThrow(() -> new RuntimeException("Official bid not found with id: " + bidId));
+                .orElseThrow(() -> new ResourceNotFoundException("OfficialBid", bidId));
 
         bid.setIsValid(false);
         bid.setIsWinningBid(false);

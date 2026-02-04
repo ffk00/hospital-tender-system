@@ -7,6 +7,7 @@ import com.hospitaltender.server.entity.Inspection;
 import com.hospitaltender.server.entity.Supplier;
 import com.hospitaltender.server.entity.Tender;
 import com.hospitaltender.server.enums.InspectionStatus;
+import com.hospitaltender.server.exception.ResourceNotFoundException;
 import com.hospitaltender.server.mapper.InspectionMapper;
 import com.hospitaltender.server.repository.InspectionRepository;
 import com.hospitaltender.server.repository.SupplierRepository;
@@ -31,10 +32,10 @@ public class InspectionServiceImpl implements InspectionService {
     @Override
     public InspectionResponse create(CreateInspectionRequest request) {
         Tender tender = tenderRepository.findById(request.getTenderId())
-                .orElseThrow(() -> new RuntimeException("Tender not found with id: " + request.getTenderId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Tender", request.getTenderId()));
 
         Supplier supplier = supplierRepository.findById(request.getSupplierId())
-                .orElseThrow(() -> new RuntimeException("Supplier not found with id: " + request.getSupplierId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier", request.getSupplierId()));
 
         Inspection inspection = inspectionMapper.toEntity(request, tender, supplier);
         Inspection savedInspection = inspectionRepository.save(inspection);
@@ -45,7 +46,7 @@ public class InspectionServiceImpl implements InspectionService {
     @Transactional(readOnly = true)
     public InspectionResponse getById(Long id) {
         Inspection inspection = inspectionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inspection not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Inspection", id));
         return inspectionMapper.toResponse(inspection);
     }
 
@@ -70,7 +71,7 @@ public class InspectionServiceImpl implements InspectionService {
     @Override
     public InspectionResponse update(Long id, UpdateInspectionRequest request) {
         Inspection inspection = inspectionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inspection not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Inspection", id));
         inspectionMapper.updateEntity(inspection, request);
         Inspection updatedInspection = inspectionRepository.save(inspection);
         return inspectionMapper.toResponse(updatedInspection);
@@ -79,7 +80,7 @@ public class InspectionServiceImpl implements InspectionService {
     @Override
     public InspectionResponse updateStatus(Long id, InspectionStatus status) {
         Inspection inspection = inspectionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inspection not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Inspection", id));
         inspection.setStatus(status);
         Inspection updatedInspection = inspectionRepository.save(inspection);
         return inspectionMapper.toResponse(updatedInspection);
@@ -88,7 +89,7 @@ public class InspectionServiceImpl implements InspectionService {
     @Override
     public void delete(Long id) {
         if (!inspectionRepository.existsById(id)) {
-            throw new RuntimeException("Inspection not found with id: " + id);
+            throw new ResourceNotFoundException("Inspection", id);
         }
         inspectionRepository.deleteById(id);
     }

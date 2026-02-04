@@ -14,8 +14,6 @@ public interface SupplierService {
 
     List<SupplierResponse> getAll();
 
-    List<SupplierResponse> getActiveSuppliers();
-
     SupplierResponse update(Long id, UpdateSupplierRequest request);
 
     void delete(Long id);

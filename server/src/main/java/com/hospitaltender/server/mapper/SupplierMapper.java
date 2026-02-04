@@ -21,7 +21,6 @@ public class SupplierMapper {
         supplier.setPhone(request.getPhone());
         supplier.setEmail(request.getEmail());
         supplier.setAddress(request.getAddress());
-        supplier.setIsBlacklisted(false);
         return supplier;
     }
 
@@ -56,9 +55,6 @@ public class SupplierMapper {
         if (request.getAddress() != null) {
             supplier.setAddress(request.getAddress());
         }
-        if (request.getIsBlacklisted() != null) {
-            supplier.setIsBlacklisted(request.getIsBlacklisted());
-        }
     }
 
     public SupplierResponse toResponse(Supplier supplier) {
@@ -74,7 +70,6 @@ public class SupplierMapper {
                 .phone(supplier.getPhone())
                 .email(supplier.getEmail())
                 .address(supplier.getAddress())
-                .isBlacklisted(supplier.getIsBlacklisted())
                 .createdAt(supplier.getCreatedAt())
                 .updatedAt(supplier.getUpdatedAt())
                 .build();

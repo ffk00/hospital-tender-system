@@ -5,6 +5,7 @@ import com.hospitaltender.server.dto.request.UpdateTenderRequest;
 import com.hospitaltender.server.dto.response.TenderResponse;
 import com.hospitaltender.server.entity.Tender;
 import com.hospitaltender.server.enums.TenderStatus;
+import com.hospitaltender.server.exception.ResourceNotFoundException;
 import com.hospitaltender.server.mapper.TenderMapper;
 import com.hospitaltender.server.repository.TenderRepository;
 import com.hospitaltender.server.service.TenderService;
@@ -33,7 +34,7 @@ public class TenderServiceImpl implements TenderService {
     @Transactional(readOnly = true)
     public TenderResponse getById(Long id) {
         Tender tender = tenderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tender not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tender", id));
         return tenderMapper.toResponse(tender);
     }
 
@@ -58,7 +59,7 @@ public class TenderServiceImpl implements TenderService {
     @Override
     public TenderResponse update(Long id, UpdateTenderRequest request) {
         Tender tender = tenderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tender not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tender", id));
         tenderMapper.updateEntity(tender, request);
         Tender updatedTender = tenderRepository.save(tender);
         return tenderMapper.toResponse(updatedTender);
@@ -67,7 +68,7 @@ public class TenderServiceImpl implements TenderService {
     @Override
     public TenderResponse updateStatus(Long id, TenderStatus status) {
         Tender tender = tenderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tender not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tender", id));
         tender.setStatus(status);
         Tender updatedTender = tenderRepository.save(tender);
         return tenderMapper.toResponse(updatedTender);
@@ -76,7 +77,7 @@ public class TenderServiceImpl implements TenderService {
     @Override
     public void delete(Long id) {
         if (!tenderRepository.existsById(id)) {
-            throw new RuntimeException("Tender not found with id: " + id);
+            throw new ResourceNotFoundException("Tender", id);
         }
         tenderRepository.deleteById(id);
     }

@@ -49,7 +49,4 @@ public class Supplier extends BaseEntity {
 
     @Column(name = "address", columnDefinition = "TEXT")
     private String address;
-
-    @Column(name = "is_blacklisted")
-    private Boolean isBlacklisted = false;
 }

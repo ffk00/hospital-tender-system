@@ -4,6 +4,7 @@ import com.hospitaltender.server.dto.request.CreateSupplierRequest;
 import com.hospitaltender.server.dto.request.UpdateSupplierRequest;
 import com.hospitaltender.server.dto.response.SupplierResponse;
 import com.hospitaltender.server.entity.Supplier;
+import com.hospitaltender.server.exception.ResourceNotFoundException;
 import com.hospitaltender.server.mapper.SupplierMapper;
 import com.hospitaltender.server.repository.SupplierRepository;
 import com.hospitaltender.server.service.SupplierService;
@@ -32,7 +33,7 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional(readOnly = true)
     public SupplierResponse getById(Long id) {
         Supplier supplier = supplierRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Supplier not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier", id));
         return supplierMapper.toResponse(supplier);
     }
 
@@ -46,18 +47,9 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<SupplierResponse> getActiveSuppliers() {
-        return supplierRepository.findByIsBlacklistedFalse()
-                .stream()
-                .map(supplierMapper::toResponse)
-                .toList();
-    }
-
-    @Override
     public SupplierResponse update(Long id, UpdateSupplierRequest request) {
         Supplier supplier = supplierRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Supplier not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Supplier", id));
         supplierMapper.updateEntity(supplier, request);
         Supplier updatedSupplier = supplierRepository.save(supplier);
         return supplierMapper.toResponse(updatedSupplier);
@@ -66,7 +58,7 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public void delete(Long id) {
         if (!supplierRepository.existsById(id)) {
-            throw new RuntimeException("Supplier not found with id: " + id);
+            throw new ResourceNotFoundException("Supplier", id);
         }
         supplierRepository.deleteById(id);
     }

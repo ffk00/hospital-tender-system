@@ -21,6 +21,4 @@ public class UpdateSupplierRequest {
     private String phone;
     private String email;
     private String address;
-
-    private Boolean isBlacklisted;
 }

@@ -12,9 +12,5 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     List<Supplier> findByCompanyNameContainingIgnoreCase(String companyName);
 
-    List<Supplier> findByIsBlacklistedFalse();
-
-    List<Supplier> findByIsBlacklistedTrue();
-
     boolean existsByTaxNumber(String taxNumber);
 }

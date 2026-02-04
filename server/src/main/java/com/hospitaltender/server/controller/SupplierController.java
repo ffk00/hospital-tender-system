@@ -36,12 +36,6 @@ public class SupplierController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<SupplierResponse>> getActiveSuppliers() {
-        List<SupplierResponse> responses = supplierService.getActiveSuppliers();
-        return ResponseEntity.ok(responses);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<SupplierResponse> update(@PathVariable Long id, @RequestBody UpdateSupplierRequest request) {
         SupplierResponse response = supplierService.update(id, request);

@@ -25,7 +25,6 @@ public class SupplierResponse {
     private String email;
     private String address;
 
-    private Boolean isBlacklisted;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
