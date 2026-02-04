@@ -1,5 +1,6 @@
 package com.hospitaltender.server.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hospitaltender.server.enums.TenderMethod;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,9 +19,18 @@ public class CreateTenderRequest {
     private TenderMethod method;
 
     // Dates
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate approvalDate;
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate marketResearchDate;
+
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime tenderDate;
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate contractDate;
+
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate contractEndDate;
 }
