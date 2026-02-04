@@ -4,11 +4,13 @@ import com.hospitaltender.server.dto.request.CreateUserRequest;
 import com.hospitaltender.server.dto.request.UpdateUserRequest;
 import com.hospitaltender.server.dto.response.UserResponse;
 import com.hospitaltender.server.entity.User;
+import com.hospitaltender.server.exception.DuplicateResourceException;
 import com.hospitaltender.server.exception.ResourceNotFoundException;
 import com.hospitaltender.server.mapper.UserMapper;
 import com.hospitaltender.server.repository.UserRepository;
 import com.hospitaltender.server.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +23,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponse create(CreateUserRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateResourceException("User", "email", request.getEmail());
+        }
+
         User user = userMapper.toEntity(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
     }

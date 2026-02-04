@@ -1,9 +1,12 @@
 package com.hospitaltender.server.config;
 
+import com.hospitaltender.server.entity.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -13,8 +16,20 @@ public class JpaAuditingConfig {
 
     @Bean
     public AuditorAware<Long> auditorProvider() {
-        // TODO: Replace with actual user ID from SecurityContext when Spring Security is configured
-        // For now, returns empty (no auditor) - will be updated in Security phase
-        return () -> Optional.empty();
+        return () -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return Optional.empty();
+            }
+
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof User user) {
+                return Optional.of(user.getId());
+            }
+
+            return Optional.empty();
+        };
     }
 }
