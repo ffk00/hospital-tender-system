@@ -1,0 +1,44 @@
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+}
+
+export enum TenderMethod {
+  DIRECT_PROCUREMENT = 'DIRECT_PROCUREMENT',
+  NEGOTIATED_PROCEDURE = 'NEGOTIATED_PROCEDURE',
+  OPEN_TENDER = 'OPEN_TENDER',
+}
+
+export enum TenderStatus {
+  DRAFT = 'DRAFT',
+  MARKET_RESEARCH = 'MARKET_RESEARCH',
+  BIDDING = 'BIDDING',
+  EVALUATION = 'EVALUATION',
+  AWARDED = 'AWARDED',
+  CONTRACTED = 'CONTRACTED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum UnitType {
+  PIECE = 'PIECE',
+  BOX = 'BOX',
+  PACKAGE = 'PACKAGE',
+  LITER = 'LITER',
+  KILOGRAM = 'KILOGRAM',
+  METER = 'METER',
+  SET = 'SET',
+}
+
+export enum CommissionRole {
+  CHAIRMAN = 'CHAIRMAN',
+  MEMBER = 'MEMBER',
+  RESERVE = 'RESERVE',
+}
+
+export enum InspectionStatus {
+  PENDING = 'PENDING',
+  PASSED = 'PASSED',
+  FAILED = 'FAILED',
+  PARTIAL = 'PARTIAL',
+}
