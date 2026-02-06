@@ -1,24 +1,25 @@
-// Response
 export interface MarketResearchOfferResponse {
   id: number
   tenderItemId: number
+  tenderItemName: string
   supplierId: number
   supplierName: string
-  unitPrice: number
+  offeredPrice: number
+  offerDate: string | null
   notes: string | null
   createdAt: string
-  updatedAt: string
 }
 
-// Requests
 export interface CreateMarketResearchOfferRequest {
   tenderItemId: number
   supplierId: number
-  unitPrice: number
+  offeredPrice: number
+  offerDate?: string
   notes?: string
 }
 
 export interface UpdateMarketResearchOfferRequest {
-  unitPrice?: number
+  offeredPrice?: number
+  offerDate?: string
   notes?: string
 }

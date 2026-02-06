@@ -1,35 +1,32 @@
 import { InspectionStatus } from './enums'
 
-// Response
 export interface InspectionResponse {
   id: number
-  tenderItemId: number
-  inspectorId: number
-  inspectorFullName: string
-  inspectionDate: string
-  status: InspectionStatus
-  acceptedQuantity: number
-  rejectedQuantity: number
-  notes: string | null
+  tenderId: number
+  tenderTitle: string
+  supplierId: number
+  supplierName: string
+  reportNumber: string | null
+  inspectionDate: string | null
+  invoiceNumber: string | null
+  committeeReport: string | null
+  status: InspectionStatus | null
   createdAt: string
   updatedAt: string
 }
 
-// Requests
 export interface CreateInspectionRequest {
-  tenderItemId: number
-  inspectorId: number
-  inspectionDate: string // dd-MM-yyyy
-  status: InspectionStatus
-  acceptedQuantity: number
-  rejectedQuantity: number
-  notes?: string
+  tenderId: number
+  supplierId: number
+  reportNumber?: string
+  inspectionDate?: string
+  invoiceNumber?: string
+  committeeReport?: string
 }
 
 export interface UpdateInspectionRequest {
+  reportNumber?: string
   inspectionDate?: string
-  status?: InspectionStatus
-  acceptedQuantity?: number
-  rejectedQuantity?: number
-  notes?: string
+  invoiceNumber?: string
+  committeeReport?: string
 }

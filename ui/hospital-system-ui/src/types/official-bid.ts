@@ -1,24 +1,18 @@
-// Response
 export interface OfficialBidResponse {
   id: number
   tenderItemId: number
+  tenderItemName: string
   supplierId: number
   supplierName: string
-  unitPrice: number
-  isWinner: boolean
-  isRejected: boolean
+  bidPrice: number
+  isValid: boolean
+  isWinningBid: boolean
   rejectionReason: string | null
   createdAt: string
-  updatedAt: string
 }
 
-// Requests
 export interface CreateOfficialBidRequest {
   tenderItemId: number
   supplierId: number
-  unitPrice: number
-}
-
-export interface UpdateOfficialBidRequest {
-  unitPrice?: number
+  bidPrice: number
 }

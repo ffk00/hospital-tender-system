@@ -1,35 +1,35 @@
 import { TenderMethod, TenderStatus } from './enums'
 
-// Response
 export interface TenderResponse {
   id: number
-  registrationNumber: string
-  approvalNumber: string
+  registrationNumber: string | null
+  approvalNumber: string | null
   title: string
-  description: string
+  description: string | null
   method: TenderMethod
   status: TenderStatus
-  approvalDate: string
-  marketResearchDate: string
-  tenderDate: string
-  contractDate: string
-  contractEndDate: string
+  approvalDate: string | null
+  marketResearchDate: string | null
+  tenderDate: string | null
+  contractDate: string | null
+  contractEndDate: string | null
   createdAt: string
   updatedAt: string
+  itemCount: number
+  commissionMemberCount: number
 }
 
-// Requests
 export interface CreateTenderRequest {
-  registrationNumber: string
-  approvalNumber: string
+  registrationNumber?: string
+  approvalNumber?: string
   title: string
-  description: string
+  description?: string
   method: TenderMethod
-  approvalDate: string // dd-MM-yyyy
-  marketResearchDate: string // dd-MM-yyyy
-  tenderDate: string // dd-MM-yyyy HH:mm
-  contractDate: string // dd-MM-yyyy
-  contractEndDate: string // dd-MM-yyyy
+  approvalDate?: string
+  marketResearchDate?: string
+  tenderDate?: string
+  contractDate?: string
+  contractEndDate?: string
 }
 
 export interface UpdateTenderRequest {

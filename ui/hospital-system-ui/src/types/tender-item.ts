@@ -1,6 +1,5 @@
 import { UnitType } from './enums'
 
-// Response
 export interface TenderItemResponse {
   id: number
   tenderId: number
@@ -8,20 +7,24 @@ export interface TenderItemResponse {
   quantity: number
   unit: UnitType
   approximateUnitCost: number | null
+  specifications: string | null
   createdAt: string
   updatedAt: string
+  marketResearchOfferCount: number
+  officialBidCount: number
 }
 
-// Requests
 export interface CreateTenderItemRequest {
   tenderId: number
   itemName: string
   quantity: number
   unit: UnitType
+  specifications?: string
 }
 
 export interface UpdateTenderItemRequest {
   itemName?: string
   quantity?: number
   unit?: UnitType
+  specifications?: string
 }

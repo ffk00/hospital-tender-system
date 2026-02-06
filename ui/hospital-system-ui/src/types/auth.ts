@@ -8,18 +8,23 @@ export interface LoginRequest {
 export interface RegisterRequest {
   firstName: string
   lastName: string
-  title: string
+  title?: string
   email: string
   password: string
+  role: UserRole
 }
 
 export interface AuthResponse {
   token: string
+  userId: number
   email: string
+  fullName: string
   role: UserRole
 }
 
 export interface AuthUser {
+  userId: number
   email: string
+  fullName: string
   role: UserRole
 }
