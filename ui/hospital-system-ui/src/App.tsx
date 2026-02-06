@@ -10,6 +10,8 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import DashboardLayout from '@/layouts/DashboardLayout'
 import LoginPage from '@/pages/LoginPage'
 import DashboardPage from '@/pages/DashboardPage'
+import UserListPage from '@/pages/users/UserListPage'
+import SupplierListPage from '@/pages/suppliers/SupplierListPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +41,26 @@ function App() {
                     <ProtectedRoute>
                       <DashboardLayout>
                         <DashboardPage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/users"
+                  element={
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <UserListPage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/suppliers"
+                  element={
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <SupplierListPage />
                       </DashboardLayout>
                     </ProtectedRoute>
                   }
