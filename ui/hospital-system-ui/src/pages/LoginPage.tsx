@@ -46,7 +46,7 @@ export default function LoginPage() {
 
     try {
       const response = await authService.login(data)
-      login(response.token, response.email, response.role)
+      login(response)
       enqueueSnackbar('Giriş başarılı!', { variant: 'success' })
       navigate('/')
     } catch {

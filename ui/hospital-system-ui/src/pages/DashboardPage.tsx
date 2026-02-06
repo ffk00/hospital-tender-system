@@ -55,34 +55,34 @@ export default function DashboardPage() {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Hos Geldiniz
+        Hoş Geldiniz
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-        Hastane Ihale Yonetim Sistemine hosgeldiniz. Asagidaki baglantilari
-        kullanarak islemlerinizi gerceklestirebilirsiniz.
+        Hastane İhale Yönetim Sistemine hoşgeldiniz. Aşağıdaki bağlantıları
+        kullanarak işlemlerinizi gerçekleştirebilirsiniz.
       </Typography>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
           <QuickLink
-            title="Kullanicilar"
-            description="Kullanici yonetimi"
+            title="Kullanıcılar"
+            description="Kullanıcı yönetimi"
             icon={<PeopleIcon />}
             path="/users"
           />
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           <QuickLink
-            title="Tedarikciler"
-            description="Tedarikci yonetimi"
+            title="Tedarikçiler"
+            description="Tedarikçi yönetimi"
             icon={<BusinessIcon />}
             path="/suppliers"
           />
         </Grid>
         <Grid size={{ xs: 12, md: 4 }}>
           <QuickLink
-            title="Ihaleler"
-            description="Ihale yonetimi"
+            title="İhaleler"
+            description="İhale yönetimi"
             icon={<AssignmentIcon />}
             path="/tenders"
           />

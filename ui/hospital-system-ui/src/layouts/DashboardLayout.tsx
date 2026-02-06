@@ -134,7 +134,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Hastane İhale Yönetim Sistemi
           </Typography>
-          <Typography variant="body2">{user?.email}</Typography>
+          <Typography variant="body2">{user?.fullName}</Typography>
         </Toolbar>
       </AppBar>
       <Box

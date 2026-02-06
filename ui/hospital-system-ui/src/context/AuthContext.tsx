@@ -1,10 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { AuthUser, UserRole } from '@/types'
+import { AuthUser, AuthResponse, UserRole } from '@/types'
 
 interface AuthContextType {
   user: AuthUser | null
   token: string | null
-  login: (token: string, email: string, role: UserRole) => void
+  login: (response: AuthResponse) => void
   logout: () => void
   isAuthenticated: boolean
 }
@@ -20,29 +20,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [token, setToken] = useState<string | null>(null)
 
   useEffect(() => {
-    // Check for existing token on mount
     const storedToken = localStorage.getItem('token')
-    const storedEmail = localStorage.getItem('email')
-    const storedRole = localStorage.getItem('role') as UserRole | null
+    const storedUser = localStorage.getItem('user')
 
-    if (storedToken && storedEmail && storedRole) {
+    if (storedToken && storedUser) {
       setToken(storedToken)
-      setUser({ email: storedEmail, role: storedRole })
+      setUser(JSON.parse(storedUser))
     }
   }, [])
 
-  const login = (newToken: string, email: string, role: UserRole) => {
-    localStorage.setItem('token', newToken)
-    localStorage.setItem('email', email)
-    localStorage.setItem('role', role)
-    setToken(newToken)
-    setUser({ email, role })
+  const login = (response: AuthResponse) => {
+    const authUser: AuthUser = {
+      userId: response.userId,
+      email: response.email,
+      fullName: response.fullName,
+      role: response.role,
+    }
+    localStorage.setItem('token', response.token)
+    localStorage.setItem('user', JSON.stringify(authUser))
+    setToken(response.token)
+    setUser(authUser)
   }
 
   const logout = () => {
     localStorage.removeItem('token')
-    localStorage.removeItem('email')
-    localStorage.removeItem('role')
+    localStorage.removeItem('user')
     setToken(null)
     setUser(null)
   }
