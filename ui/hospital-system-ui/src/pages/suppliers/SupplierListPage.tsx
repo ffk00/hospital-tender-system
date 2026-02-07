@@ -50,7 +50,6 @@ export default function SupplierListPage() {
   }
 
   const columns: GridColDef<SupplierResponse>[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
     { field: 'companyName', headerName: 'Firma Adı', flex: 1.5 },
     { field: 'taxNumber', headerName: 'Vergi No', width: 130 },
     { field: 'contactName', headerName: 'İletişim Kişisi', flex: 1 },

@@ -57,7 +57,6 @@ export default function UserListPage() {
   }
 
   const columns: GridColDef<UserResponse>[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
     { field: 'firstName', headerName: 'Ad', flex: 1 },
     { field: 'lastName', headerName: 'Soyad', flex: 1 },
     { field: 'title', headerName: 'Ünvan', flex: 1 },
