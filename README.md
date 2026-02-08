@@ -1,6 +1,6 @@
 # Hospital Procurement Management System
 
-> **A streamlined, modern procurement solution tailored for the operational reality of local hospitals.**
+> **Procurement solution tailored for the operational reality of local hospitals in Türkiye.**
 
 ## Project Overview
 
@@ -8,15 +8,16 @@ This project provides a streamlined, modern procurement management solution tail
 
 ## The Challenge
 
-Standard Enterprise Resource Planning (ERP) and tender management systems currently utilized in the healthcare sector are engineered primarily for massive university or city hospitals. These systems strictly adhere to high-level bureaucratic structures, enforcing rigid workflows and mandatory data entry from multiple distinct departments. While these constraints are necessary for large-scale, high-stakes tenders, they often become **operational bottlenecks** in smaller administrative environments.
+In Türkiye, most ERP and procurement tools in the healthcare sector are designed for very large university or city hospitals.These systems are built to follow complex administrative layers and strict government rules that fit massive organizations. While these rules are necessary for huge budgets, they often create unnecessary friction for smaller teams.
 
-In local hospital settings, the procurement lifecycle is typically centralized within the **Purchasing Department** (Satın Alma Birimi). Legacy software often imposes "overkill" constraints—such as requiring cross-departmental approvals for minor steps—which leads to friction and inefficiency. Consequently, staff often abandon these complex official tools in favor of manual spreadsheets, resulting in data fragmentation and a loss of historical audit trails.
+In local hospital settings, the procurement lifecycle is centralized within the Purchasing Department (Satın Alma Birimi). Yet, legacy software imposes "overkill" constraints like mandatory multi-department approvals for simple tasks. As a result, staff often revert to manual spreadsheets to get work done. This leads to a situation where expensive software licenses remain underused, creating a substantial financial burden for local institutions.
 
 ## The Solution
 
-This project offers a specialized alternative by simplifying the procurement workflow without compromising institutional accountability. The system is built on a **role-specific architecture** that empowers purchasing officers to manage the end-to-end tender process within a single, unified interface.
+This project offers a specialized, open-source alternative that eliminates the financial burden of expensive, underutilized enterprise licenses. By simplifying the procurement workflow without compromising institutional accountability, it prevents the waste of public resources often spent on complex software that staff cannot effectively use.
 
-By replacing clunky legacy desktop interfaces with a reactive web-based solution, the system eliminates artificial barriers that block progress in smaller teams. The focus is shifted from *"enforcing bureaucracy"* to *"facilitating procurement,"* allowing for greater operational agility while maintaining a modern technical foundation.
+By replacing clunky legacy desktop interfaces with a reactive web-based solution, the system eliminates artificial barriers that block progress in smaller teams. 
+The focus is shifted from *"enforcing bureaucracy"* to *"facilitating procurement,"* allowing for better operational agility while maintaining a modern technical foundation.
 
 ## Key Features
 
@@ -34,7 +35,3 @@ By replacing clunky legacy desktop interfaces with a reactive web-based solution
 | **Database** | PostgreSQL |
 | **Infrastructure** | Docker, Docker Compose |
 | **Reporting** | JasperReports (Engine) |
-
-## Development Status
-
-This project is currently in **active development**. The primary focus is on refining the core procurement workflow and finalizing the reporting engine to ensure full compliance with local health department regulations.
