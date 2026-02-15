@@ -29,6 +29,12 @@ public class TenderCommissionController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TenderCommissionResponse>> getByUserId(@PathVariable Long userId) {
+        List<TenderCommissionResponse> responses = commissionService.getByUserId(userId);
+        return ResponseEntity.ok(responses);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeMember(@PathVariable Long id) {
         commissionService.removeMember(id);

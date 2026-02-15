@@ -4,8 +4,12 @@ import com.hospitaltender.server.dto.request.CreateTenderRequest;
 import com.hospitaltender.server.dto.request.UpdateTenderRequest;
 import com.hospitaltender.server.dto.response.TenderResponse;
 import com.hospitaltender.server.entity.Tender;
+import com.hospitaltender.server.entity.TenderCommission;
 import com.hospitaltender.server.enums.TenderStatus;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.List;
 
 @Component
 public class TenderMapper {
@@ -80,6 +84,11 @@ public class TenderMapper {
                 .updatedAt(tender.getUpdatedAt())
                 .itemCount(tender.getItems() != null ? tender.getItems().size() : 0)
                 .commissionMemberCount(tender.getCommissionMembers() != null ? tender.getCommissionMembers().size() : 0)
+                .commissionMemberNames(tender.getCommissionMembers() != null
+                        ? tender.getCommissionMembers().stream()
+                                .map(cm -> cm.getUser().getFirstName() + " " + cm.getUser().getLastName())
+                                .toList()
+                        : Collections.emptyList())
                 .build();
     }
 }

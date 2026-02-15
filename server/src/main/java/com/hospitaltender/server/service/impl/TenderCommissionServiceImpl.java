@@ -55,6 +55,15 @@ public class TenderCommissionServiceImpl implements TenderCommissionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<TenderCommissionResponse> getByUserId(Long userId) {
+        return commissionRepository.findByUserId(userId)
+                .stream()
+                .map(commissionMapper::toResponse)
+                .toList();
+    }
+
+    @Override
     public void removeMember(Long id) {
         if (!commissionRepository.existsById(id)) {
             throw new ResourceNotFoundException("TenderCommission", id);

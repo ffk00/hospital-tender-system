@@ -11,5 +11,7 @@ public interface TenderCommissionService {
 
     List<TenderCommissionResponse> getByTenderId(Long tenderId);
 
+    List<TenderCommissionResponse> getByUserId(Long userId);
+
     void removeMember(Long id);
 }

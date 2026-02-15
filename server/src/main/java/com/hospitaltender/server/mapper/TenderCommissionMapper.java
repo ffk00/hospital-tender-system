@@ -28,6 +28,7 @@ public class TenderCommissionMapper {
                 .userId(user.getId())
                 .userFullName(fullName)
                 .userTitle(user.getTitle())
+                .tenderTitle(commission.getTender().getTitle())
                 .role(commission.getRole())
                 .createdAt(commission.getCreatedAt())
                 .build();

@@ -15,6 +15,7 @@ public class TenderCommissionResponse {
     private Long userId;
     private String userFullName;
     private String userTitle;
+    private String tenderTitle;
     private CommissionRole role;
     private LocalDateTime createdAt;
 }
