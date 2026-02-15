@@ -11,6 +11,8 @@ import {
   MenuItem,
   CircularProgress,
   Chip,
+  Paper,
+  Typography,
 } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
@@ -25,8 +27,9 @@ import {
   useDeleteInspection,
 } from '@/hooks/useInspectionQueries'
 import { useSuppliers } from '@/hooks/useSupplierQueries'
-import { InspectionResponse, InspectionStatus } from '@/types'
-import { inspectionStatusLabels } from '@/constants/labels'
+import { useTenderItems } from '@/hooks/useTenderItemQueries'
+import { InspectionResponse, InspectionStatus, TenderItemResponse } from '@/types'
+import { inspectionStatusLabels, unitTypeLabels } from '@/constants/labels'
 
 const inspectionSchema = z.object({
   supplierId: z.coerce.number().min(1, 'Tedarikçi seçiniz'),
@@ -48,6 +51,7 @@ export default function InspectionTab({ tenderId }: InspectionTabProps) {
 
   const { data: inspections = [], isLoading } = useInspections(tenderId)
   const { data: suppliers = [] } = useSuppliers()
+  const { data: items = [] } = useTenderItems(tenderId)
   const createInspection = useCreateInspection(tenderId)
   const updateInspection = useUpdateInspection(tenderId)
   const updateStatus = useUpdateInspectionStatus(tenderId)
@@ -177,6 +181,22 @@ export default function InspectionTab({ tenderId }: InspectionTabProps) {
 
   return (
     <Box>
+      {items.length > 0 && (
+        <Paper variant="outlined" sx={{ p: 1.5, mb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body2" color="text.secondary" sx={{ mr: 0.5 }}>
+            İhale Kalemleri:
+          </Typography>
+          {items.map((item: TenderItemResponse) => (
+            <Chip
+              key={item.id}
+              label={`${item.itemName} (${item.quantity} ${unitTypeLabels[item.unit]})`}
+              size="small"
+              variant="outlined"
+            />
+          ))}
+        </Paper>
+      )}
+
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <Button variant="contained" startIcon={<AddIcon />} onClick={handleCreate}>
           Muayene Kaydı Ekle

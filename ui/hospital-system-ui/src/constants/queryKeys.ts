@@ -18,4 +18,6 @@ export const QUERY_KEYS = {
   OFFICIAL_BIDS: (tenderItemId: number) => ['tender-items', tenderItemId, 'official-bids'] as const,
 
   INSPECTIONS: (tenderItemId: number) => ['tender-items', tenderItemId, 'inspections'] as const,
+
+  USER_COMMISSIONS: (userId: number) => ['users', userId, 'commissions'] as const,
 }

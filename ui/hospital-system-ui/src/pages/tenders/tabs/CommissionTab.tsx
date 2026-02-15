@@ -10,9 +10,14 @@ import {
   TextField,
   MenuItem,
   CircularProgress,
+  Menu,
 } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  Description as DescriptionIcon,
+} from '@mui/icons-material'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -24,6 +29,8 @@ import {
 import { useUsers } from '@/hooks/useUserQueries'
 import { TenderCommissionResponse, CommissionRole } from '@/types'
 import { commissionRoleLabels } from '@/constants/labels'
+import ReportDialog, { ReportField } from '@/components/reports/ReportDialog'
+import { reportService } from '@/services/report.service'
 
 const commissionSchema = z.object({
   userId: z.coerce.number().min(1, 'Kullanıcı seçiniz'),
@@ -38,6 +45,8 @@ interface CommissionTabProps {
 
 export default function CommissionTab({ tenderId }: CommissionTabProps) {
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [reportMenuAnchor, setReportMenuAnchor] = useState<null | HTMLElement>(null)
+  const [reportDialogType, setReportDialogType] = useState<string | null>(null)
 
   const { data: members = [], isLoading } = useTenderCommissions(tenderId)
   const { data: users = [] } = useUsers()
@@ -94,9 +103,53 @@ export default function CommissionTab({ tenderId }: CommissionTabProps) {
     },
   ]
 
+  // Report field configs
+  const komisyonKarariFields: ReportField[] = [
+    { name: 'decisionNumber', label: 'Karar No', type: 'text', required: true },
+    { name: 'decisionDate', label: 'Karar Tarihi', type: 'date', required: true },
+    { name: 'hospitalName', label: 'Kurum Adı', type: 'text', required: true },
+    { name: 'purposeText', label: 'Amaç Metni', type: 'text' },
+  ]
+
+  const gorevlendirmeFields: ReportField[] = [
+    { name: 'documentNumber', label: 'Belge No', type: 'text', required: true },
+    { name: 'documentDate', label: 'Tarih', type: 'date', required: true },
+    { name: 'purposeText', label: 'Görevlendirme Amacı', type: 'text' },
+    { name: 'chiefPhysicianName', label: 'Başhekim', type: 'text' },
+  ]
+
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mb: 2 }}>
+        <Button
+          variant="outlined"
+          startIcon={<DescriptionIcon />}
+          onClick={(e) => setReportMenuAnchor(e.currentTarget)}
+        >
+          Rapor Oluştur
+        </Button>
+        <Menu
+          anchorEl={reportMenuAnchor}
+          open={Boolean(reportMenuAnchor)}
+          onClose={() => setReportMenuAnchor(null)}
+        >
+          <MenuItem
+            onClick={() => {
+              setReportMenuAnchor(null)
+              setReportDialogType('komisyon')
+            }}
+          >
+            Komisyon Kararı
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              setReportMenuAnchor(null)
+              setReportDialogType('gorevlendirme')
+            }}
+          >
+            Görevlendirme
+          </MenuItem>
+        </Menu>
         <Button variant="contained" startIcon={<AddIcon />} onClick={handleCreate}>
           Üye Ekle
         </Button>
@@ -157,6 +210,24 @@ export default function CommissionTab({ tenderId }: CommissionTabProps) {
           </DialogActions>
         </form>
       </Dialog>
+
+      {/* Report Dialogs */}
+      <ReportDialog
+        open={reportDialogType === 'komisyon'}
+        onClose={() => setReportDialogType(null)}
+        title="İhtiyaç Tespit Komisyon Kararı"
+        fields={komisyonKarariFields}
+        onGenerate={(values) => reportService.generateKomisyonKarari(tenderId, values)}
+        fileName="komisyon-karari.pdf"
+      />
+      <ReportDialog
+        open={reportDialogType === 'gorevlendirme'}
+        onClose={() => setReportDialogType(null)}
+        title="Görevlendirme Yazısı"
+        fields={gorevlendirmeFields}
+        onGenerate={(values) => reportService.generateGorevlendirme(tenderId, values)}
+        fileName="gorevlendirme.pdf"
+      />
     </Box>
   )
 }

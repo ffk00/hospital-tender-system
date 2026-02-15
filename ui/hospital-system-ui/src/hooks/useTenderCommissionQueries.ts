@@ -12,6 +12,14 @@ export function useTenderCommissions(tenderId: number) {
   })
 }
 
+export function useTenderCommissionsByUser(userId: number) {
+  return useQuery({
+    queryKey: QUERY_KEYS.USER_COMMISSIONS(userId),
+    queryFn: () => tenderCommissionService.getByUserId(userId),
+    enabled: !!userId,
+  })
+}
+
 export function useCreateTenderCommission(tenderId: number) {
   const queryClient = useQueryClient()
   const { enqueueSnackbar } = useSnackbar()

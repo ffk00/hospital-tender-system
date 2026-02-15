@@ -10,9 +10,15 @@ import {
   TextField,
   MenuItem,
   CircularProgress,
+  Menu,
 } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Description as DescriptionIcon,
+} from '@mui/icons-material'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -22,9 +28,12 @@ import {
   useUpdateTenderItem,
   useDeleteTenderItem,
 } from '@/hooks/useTenderItemQueries'
+import { useSuppliers } from '@/hooks/useSupplierQueries'
 import { TenderItemResponse, UnitType } from '@/types'
 import { unitTypeLabels } from '@/constants/labels'
 import { formatCurrency } from '@/utils/format'
+import ReportDialog, { ReportField } from '@/components/reports/ReportDialog'
+import { reportService } from '@/services/report.service'
 
 const itemSchema = z.object({
   itemName: z.string().min(1, 'Kalem adı gereklidir'),
@@ -42,8 +51,11 @@ interface ItemsTabProps {
 export default function ItemsTab({ tenderId }: ItemsTabProps) {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<TenderItemResponse | null>(null)
+  const [reportMenuAnchor, setReportMenuAnchor] = useState<null | HTMLElement>(null)
+  const [reportDialogType, setReportDialogType] = useState<string | null>(null)
 
   const { data: items = [], isLoading } = useTenderItems(tenderId)
+  const { data: suppliers = [] } = useSuppliers()
   const createItem = useCreateTenderItem(tenderId)
   const updateItem = useUpdateTenderItem(tenderId)
   const deleteItem = useDeleteTenderItem(tenderId)
@@ -133,9 +145,63 @@ export default function ItemsTab({ tenderId }: ItemsTabProps) {
 
   const isMutating = createItem.isPending || updateItem.isPending
 
+  // Report field configs
+  const luzumFields: ReportField[] = [
+    { name: 'documentNumber', label: 'Belge No', type: 'text', required: true },
+    { name: 'documentDate', label: 'Tarih', type: 'date', required: true },
+    { name: 'requestSubject', label: 'Talep Konusu', type: 'text' },
+    { name: 'serviceManager1', label: 'Servis Sorumlusu 1', type: 'text' },
+    { name: 'serviceManager2', label: 'Servis Sorumlusu 2', type: 'text' },
+    { name: 'pharmacistName', label: 'Eczacı Adı', type: 'text' },
+    { name: 'warehouseManagerName', label: 'Depo Sorumlusu', type: 'text' },
+    { name: 'adminManagerName', label: 'İdari Mali İşler Müdürü', type: 'text' },
+    { name: 'chiefPhysicianName', label: 'Başhekim', type: 'text' },
+  ]
+
+  const teklifFields: ReportField[] = [
+    { name: 'documentNumber', label: 'Belge No', type: 'text', required: true },
+    {
+      name: 'supplierId',
+      label: 'Tedarikçi',
+      type: 'select',
+      required: true,
+      options: suppliers.map((s) => ({ value: s.id, label: s.companyName })),
+    },
+    { name: 'chiefPhysicianName', label: 'Başhekim', type: 'text' },
+  ]
+
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mb: 2 }}>
+        <Button
+          variant="outlined"
+          startIcon={<DescriptionIcon />}
+          onClick={(e) => setReportMenuAnchor(e.currentTarget)}
+        >
+          Rapor Oluştur
+        </Button>
+        <Menu
+          anchorEl={reportMenuAnchor}
+          open={Boolean(reportMenuAnchor)}
+          onClose={() => setReportMenuAnchor(null)}
+        >
+          <MenuItem
+            onClick={() => {
+              setReportMenuAnchor(null)
+              setReportDialogType('luzum')
+            }}
+          >
+            Lüzum Müzekkeresi
+          </MenuItem>
+          <MenuItem
+            onClick={() => {
+              setReportMenuAnchor(null)
+              setReportDialogType('teklif')
+            }}
+          >
+            Teklif Mektubu
+          </MenuItem>
+        </Menu>
         <Button variant="contained" startIcon={<AddIcon />} onClick={handleCreate}>
           Kalem Ekle
         </Button>
@@ -204,6 +270,24 @@ export default function ItemsTab({ tenderId }: ItemsTabProps) {
           </DialogActions>
         </form>
       </Dialog>
+
+      {/* Report Dialogs */}
+      <ReportDialog
+        open={reportDialogType === 'luzum'}
+        onClose={() => setReportDialogType(null)}
+        title="Lüzum Müzekkeresi"
+        fields={luzumFields}
+        onGenerate={(values) => reportService.generateLuzumMuzekkeresi(tenderId, values)}
+        fileName="luzum-muzekkeresi.pdf"
+      />
+      <ReportDialog
+        open={reportDialogType === 'teklif'}
+        onClose={() => setReportDialogType(null)}
+        title="Teklif Mektubu"
+        fields={teklifFields}
+        onGenerate={(values) => reportService.generateTeklifMektubu(tenderId, values)}
+        fileName="teklif-mektubu.pdf"
+      />
     </Box>
   )
 }

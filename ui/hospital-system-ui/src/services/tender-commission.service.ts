@@ -5,6 +5,9 @@ export const tenderCommissionService = {
   getByTenderId: (tenderId: number) =>
     api.get<TenderCommissionResponse[]>(`/tender-commissions/tender/${tenderId}`).then((res) => res.data),
 
+  getByUserId: (userId: number) =>
+    api.get<TenderCommissionResponse[]>(`/tender-commissions/user/${userId}`).then((res) => res.data),
+
   create: (data: CreateTenderCommissionRequest) =>
     api.post<TenderCommissionResponse>('/tender-commissions', data).then((res) => res.data),
 

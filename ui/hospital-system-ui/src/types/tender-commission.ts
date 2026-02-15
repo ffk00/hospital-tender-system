@@ -6,6 +6,7 @@ export interface TenderCommissionResponse {
   userId: number
   userFullName: string
   userTitle: string | null
+  tenderTitle: string
   role: CommissionRole
   createdAt: string
 }
