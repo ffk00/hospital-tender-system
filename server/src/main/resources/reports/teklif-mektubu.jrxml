@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport name="teklif-mektubu" language="java" pageWidth="595" pageHeight="842" columnWidth="515"
+              leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40">
+
+    <parameter name="tenderTitle" class="java.lang.String"/>
+    <parameter name="documentNumber" class="java.lang.String"/>
+    <parameter name="supplierName" class="java.lang.String"/>
+    <parameter name="supplierAddress" class="java.lang.String"/>
+    <parameter name="supplierTaxNumber" class="java.lang.String"/>
+    <parameter name="supplierTaxOffice" class="java.lang.String"/>
+    <parameter name="chiefPhysicianName" class="java.lang.String"/>
+
+    <field name="itemName" class="java.lang.String"/>
+    <field name="specifications" class="java.lang.String"/>
+    <field name="quantity" class="java.math.BigDecimal"/>
+    <field name="unit" class="java.lang.String"/>
+
+    <title height="120">
+        <element kind="staticText" x="0" y="0" width="515" height="30" fontSize="14.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <text><![CDATA[TEKLIF MEKTUBU]]></text>
+        </element>
+        <element kind="textField" x="0" y="35" width="515" height="20" fontSize="10.0">
+            <expression><![CDATA["Belge No: " + $P{documentNumber}]]></expression>
+        </element>
+        <element kind="textField" x="0" y="55" width="515" height="20" fontSize="10.0">
+            <expression><![CDATA["Ihale Konusu: " + $P{tenderTitle}]]></expression>
+        </element>
+        <element kind="textField" x="0" y="75" width="515" height="20" fontSize="10.0" blankWhenNull="true">
+            <expression><![CDATA["Tedarikci: " + $P{supplierName}]]></expression>
+        </element>
+        <element kind="textField" x="0" y="95" width="515" height="20" fontSize="9.0" blankWhenNull="true">
+            <expression><![CDATA["Adres: " + $P{supplierAddress} + "  VKN: " + $P{supplierTaxNumber} + " / " + $P{supplierTaxOffice}]]></expression>
+        </element>
+    </title>
+
+    <columnHeader height="25">
+        <element kind="staticText" x="0" y="0" width="30" height="25" mode="Opaque" backcolor="#DDDDDD" fontSize="9.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <box><pen lineWidth="0.5"/></box>
+            <text><![CDATA[S.No]]></text>
+        </element>
+        <element kind="staticText" x="30" y="0" width="235" height="25" mode="Opaque" backcolor="#DDDDDD" fontSize="9.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <box><pen lineWidth="0.5"/></box>
+            <text><![CDATA[Malzeme Adi]]></text>
+        </element>
+        <element kind="staticText" x="265" y="0" width="120" height="25" mode="Opaque" backcolor="#DDDDDD" fontSize="9.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <box><pen lineWidth="0.5"/></box>
+            <text><![CDATA[Teknik Sartname]]></text>
+        </element>
+        <element kind="staticText" x="385" y="0" width="65" height="25" mode="Opaque" backcolor="#DDDDDD" fontSize="9.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <box><pen lineWidth="0.5"/></box>
+            <text><![CDATA[Miktar]]></text>
+        </element>
+        <element kind="staticText" x="450" y="0" width="65" height="25" mode="Opaque" backcolor="#DDDDDD" fontSize="9.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <box><pen lineWidth="0.5"/></box>
+            <text><![CDATA[Birim]]></text>
+        </element>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <element kind="textField" x="0" y="0" width="30" height="20" fontSize="8.0" hTextAlign="Center" vTextAlign="Middle">
+                <box><pen lineWidth="0.5"/></box>
+                <expression><![CDATA[$V{REPORT_COUNT}]]></expression>
+            </element>
+            <element kind="textField" x="30" y="0" width="235" height="20" fontSize="8.0" vTextAlign="Middle" blankWhenNull="true">
+                <box leftPadding="3"><pen lineWidth="0.5"/></box>
+                <expression><![CDATA[$F{itemName}]]></expression>
+            </element>
+            <element kind="textField" x="265" y="0" width="120" height="20" fontSize="8.0" vTextAlign="Middle" blankWhenNull="true">
+                <box leftPadding="3"><pen lineWidth="0.5"/></box>
+                <expression><![CDATA[$F{specifications}]]></expression>
+            </element>
+            <element kind="textField" x="385" y="0" width="65" height="20" fontSize="8.0" hTextAlign="Center" vTextAlign="Middle" blankWhenNull="true">
+                <box><pen lineWidth="0.5"/></box>
+                <expression><![CDATA[$F{quantity}]]></expression>
+            </element>
+            <element kind="textField" x="450" y="0" width="65" height="20" fontSize="8.0" hTextAlign="Center" vTextAlign="Middle" blankWhenNull="true">
+                <box><pen lineWidth="0.5"/></box>
+                <expression><![CDATA[$F{unit}]]></expression>
+            </element>
+        </band>
+    </detail>
+
+    <summary height="80">
+        <element kind="staticText" x="0" y="10" width="515" height="15" fontSize="9.0" bold="true">
+            <text><![CDATA[Imzalar:]]></text>
+        </element>
+        <element kind="textField" x="0" y="30" width="260" height="30" fontSize="8.0" hTextAlign="Center" blankWhenNull="true">
+            <expression><![CDATA["Tedarikci Yetkilisi\n" + $P{supplierName}]]></expression>
+        </element>
+        <element kind="textField" x="260" y="30" width="255" height="30" fontSize="8.0" hTextAlign="Center" blankWhenNull="true">
+            <expression><![CDATA["Bashekim\n" + $P{chiefPhysicianName}]]></expression>
+        </element>
+    </summary>
+</jasperReport>
