@@ -13,6 +13,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ButtonBase,
 } from '@mui/material'
 import {
   Menu as MenuIcon,
@@ -21,6 +22,7 @@ import {
   Business as BusinessIcon,
   Assignment as AssignmentIcon,
   Logout as LogoutIcon,
+  AccountCircle as AccountCircleIcon,
 } from '@mui/icons-material'
 import { useAuth } from '@/context/AuthContext'
 import logo from '@/assets/bakanlik-logo.png'
@@ -134,7 +136,21 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Hastane İhale Yönetim Sistemi
           </Typography>
-          <Typography variant="body2">{user?.fullName}</Typography>
+          <ButtonBase
+            onClick={() => navigate('/profile')}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              borderRadius: 1,
+              px: 1.5,
+              py: 0.5,
+              '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' },
+            }}
+          >
+            <AccountCircleIcon />
+            <Typography variant="body2" color="inherit">{user?.fullName}</Typography>
+          </ButtonBase>
         </Toolbar>
       </AppBar>
       <Box

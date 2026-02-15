@@ -14,6 +14,7 @@ import UserListPage from '@/pages/users/UserListPage'
 import SupplierListPage from '@/pages/suppliers/SupplierListPage'
 import TenderListPage from '@/pages/tenders/TenderListPage'
 import TenderDetailPage from '@/pages/tenders/TenderDetailPage'
+import ProfilePage from '@/pages/ProfilePage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -83,6 +84,16 @@ function App() {
                     <ProtectedRoute>
                       <DashboardLayout>
                         <TenderDetailPage />
+                      </DashboardLayout>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <ProfilePage />
                       </DashboardLayout>
                     </ProtectedRoute>
                   }

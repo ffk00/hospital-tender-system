@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Box,
   Typography,
@@ -8,10 +8,16 @@ import {
   CircularProgress,
   Alert,
   Chip,
+  IconButton,
 } from '@mui/material'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
-import { ArrowBack as BackIcon } from '@mui/icons-material'
+import {
+  ArrowBack as BackIcon,
+  Star as StarIcon,
+  StarBorder as StarBorderIcon,
+} from '@mui/icons-material'
 import { useTender } from '@/hooks/useTenderQueries'
+import { useFavoriteTenders } from '@/hooks/useFavoriteTenders'
 import { tenderStatusLabels, tenderStatusColors, tenderMethodLabels } from '@/constants/labels'
 import GeneralInfoTab from './tabs/GeneralInfoTab'
 import ItemsTab from './tabs/ItemsTab'
@@ -23,10 +29,13 @@ import InspectionTab from './tabs/InspectionTab'
 export default function TenderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [tabValue, setTabValue] = useState('1')
+  const [searchParams] = useSearchParams()
+  const initialTab = searchParams.get('tab') || '1'
+  const [tabValue, setTabValue] = useState(initialTab)
 
   const tenderId = Number(id)
   const { data: tender, isLoading, error } = useTender(tenderId)
+  const { isFavorite, toggleFavorite } = useFavoriteTenders()
 
   if (isLoading) {
     return (
@@ -55,6 +64,12 @@ export default function TenderDetailPage() {
           İhalelere Dön
         </Button>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <IconButton
+            onClick={() => toggleFavorite(tenderId)}
+            sx={{ color: isFavorite(tenderId) ? 'warning.main' : 'action.disabled' }}
+          >
+            {isFavorite(tenderId) ? <StarIcon /> : <StarBorderIcon />}
+          </IconButton>
           <Typography variant="h5">{tender.title}</Typography>
           <Chip
             label={tenderStatusLabels[tender.status]}

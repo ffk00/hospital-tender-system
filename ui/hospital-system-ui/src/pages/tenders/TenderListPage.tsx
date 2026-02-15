@@ -6,8 +6,12 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  Star as StarIcon,
+  StarBorder as StarBorderIcon,
+  Groups as GroupsIcon,
 } from '@mui/icons-material'
 import { useTenders, useCreateTender, useUpdateTender, useDeleteTender } from '@/hooks/useTenderQueries'
+import { useFavoriteTenders } from '@/hooks/useFavoriteTenders'
 import { TenderResponse, TenderMethod, TenderStatus, CreateTenderRequest, UpdateTenderRequest } from '@/types'
 import { tenderMethodLabels, tenderStatusLabels, tenderStatusColors } from '@/constants/labels'
 import { formatDate } from '@/utils/format'
@@ -22,6 +26,7 @@ export default function TenderListPage() {
   const createTender = useCreateTender()
   const updateTender = useUpdateTender()
   const deleteTender = useDeleteTender()
+  const { isFavorite, toggleFavorite } = useFavoriteTenders()
 
   const handleCreate = () => {
     setSelectedTender(null)
@@ -56,6 +61,25 @@ export default function TenderListPage() {
 
   const columns: GridColDef<TenderResponse>[] = [
     {
+      field: 'favorite',
+      headerName: '',
+      width: 50,
+      sortable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <IconButton
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation()
+            toggleFavorite(params.row.id)
+          }}
+          sx={{ color: isFavorite(params.row.id) ? 'warning.main' : 'action.disabled' }}
+        >
+          {isFavorite(params.row.id) ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize="small" />}
+        </IconButton>
+      ),
+    },
+    {
       field: 'title',
       headerName: 'İhale Başlığı',
       flex: 2,
@@ -85,6 +109,38 @@ export default function TenderListPage() {
       renderCell: (params) => formatDate(params.value),
     },
     { field: 'itemCount', headerName: 'Kalem', width: 80, align: 'center', headerAlign: 'center' },
+    {
+      field: 'commissionMemberCount',
+      headerName: 'Komisyon',
+      width: 100,
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: (params) => {
+        const count = params.value as number
+        const names = (params.row as TenderResponse).commissionMemberNames
+        return (
+          <Tooltip
+            title={
+              names && names.length > 0
+                ? names.join(', ')
+                : 'Komisyon üyesi yok'
+            }
+            arrow
+          >
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', gap: 0.5, cursor: 'pointer' }}
+              onClick={(e) => {
+                e.stopPropagation()
+                navigate(`/tenders/${params.row.id}?tab=3`)
+              }}
+            >
+              <GroupsIcon fontSize="small" color="action" />
+              <Typography variant="body2">{count}</Typography>
+            </Box>
+          </Tooltip>
+        )
+      },
+    },
     { field: 'registrationNumber', headerName: 'İKN', width: 140 },
     {
       field: 'actions',

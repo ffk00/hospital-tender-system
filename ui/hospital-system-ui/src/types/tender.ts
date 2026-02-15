@@ -17,6 +17,7 @@ export interface TenderResponse {
   updatedAt: string
   itemCount: number
   commissionMemberCount: number
+  commissionMemberNames: string[]
 }
 
 export interface CreateTenderRequest {
