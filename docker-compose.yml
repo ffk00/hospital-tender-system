@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hospital_tender_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 3311
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/hospital_tender_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: 3311
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:
