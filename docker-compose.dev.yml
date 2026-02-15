@@ -12,7 +12,7 @@ services:
       - "5432:5432"
 
   app:
-    image: ghcr.io/ffk00/hospital-tender-system:latest
+    build: .
     restart: unless-stopped
     depends_on:
       - db
@@ -22,21 +22,6 @@ services:
       DB_PASSWORD: 3311
     ports:
       - "8080:8080"
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-
-  watchtower:
-    image: containrrr/watchtower
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      WATCHTOWER_POLL_INTERVAL: 300
-      WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_INCLUDE_STOPPED: "true"
-    command: --label-enable
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
 
 volumes:
   pgdata:
