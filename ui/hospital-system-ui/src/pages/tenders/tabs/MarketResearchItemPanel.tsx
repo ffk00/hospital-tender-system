@@ -14,7 +14,7 @@ import {
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@hookform/resolvers/zod/v4'
 import { z } from 'zod'
 import {
   useMarketResearchOffers,

@@ -10,7 +10,7 @@ import {
   CircularProgress,
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodResolver } from '@hookform/resolvers/zod/v4'
 import { z } from 'zod'
 import { UserResponse, UserRole } from '@/types'
 
