@@ -11,7 +11,7 @@ import {
   Grid,
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod/v4'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { TenderResponse, TenderMethod } from '@/types'
 import { tenderMethodLabels } from '@/constants/labels'
